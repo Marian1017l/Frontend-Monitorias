@@ -17,8 +17,8 @@ export function FormularioTurno() {
       </div>
 
       <form onSubmit={handleSubmit} style={estilos.form}>
-        <Campo label="Salon">
-          <select name="salonId" value={campos.salonId} onChange={handleChange} required style={estilos.control}>
+        <Campo label="Salon" htmlFor="salonId">
+          <select id="salonId" name="salonId" value={campos.salonId} onChange={handleChange} required style={estilos.control}>
             <option value="">Selecciona un salon</option>
             {salones.map((s) => (
               <option key={s.id} value={s.id}>{s.nombre}</option>
@@ -26,8 +26,8 @@ export function FormularioTurno() {
           </select>
         </Campo>
 
-        <Campo label="Monitor">
-          <select name="monitorId" value={campos.monitorId} onChange={handleChange} required style={estilos.control}>
+        <Campo label="Monitor" htmlFor="monitorId">
+          <select id="monitorId" name="monitorId" value={campos.monitorId} onChange={handleChange} required style={estilos.control}>
             <option value="">Selecciona un monitor</option>
             {monitores.map((m) => (
               <option key={m.id} value={m.id}>{m.nombre}</option>
@@ -35,16 +35,16 @@ export function FormularioTurno() {
           </select>
         </Campo>
 
-        <Campo label="Fecha">
-          <input type="date" name="fecha" value={campos.fecha} onChange={handleChange} required style={estilos.control} />
+        <Campo label="Fecha" htmlFor="fecha">
+          <input id="fecha" type="date" name="fecha" value={campos.fecha} onChange={handleChange} required style={estilos.control} />
         </Campo>
 
-        <Campo label="Hora inicio">
-          <input type="time" name="horaInicio" value={campos.horaInicio} onChange={handleChange} required style={estilos.control} />
+        <Campo label="Hora inicio" htmlFor="horaInicio">
+          <input id="horaInicio" type="time" name="horaInicio" value={campos.horaInicio} onChange={handleChange} required style={estilos.control} />
         </Campo>
 
-        <Campo label="Hora fin">
-          <input type="time" name="horaFin" value={campos.horaFin} onChange={handleChange} required style={estilos.control} />
+        <Campo label="Hora fin" htmlFor="horaFin">
+          <input id="horaFin" type="time" name="horaFin" value={campos.horaFin} onChange={handleChange} required style={estilos.control} />
         </Campo>
 
         <FeedbackMessage feedback={feedback} />
