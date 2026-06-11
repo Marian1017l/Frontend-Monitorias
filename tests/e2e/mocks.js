@@ -30,3 +30,23 @@ export async function mockDisponibilidad(page, { lans = DISPONIBILIDAD_LANS, cen
     await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(lans) });
   });
 }
+
+export const TURNOS_PENDIENTES = [
+  {
+    id: "turno-seed-001",
+    monitor: { id: "monitor-001", nombre: "Mariana López", email: "mariana.lopez35806@ucaldas.edu.co" },
+    sala: { id: "sala-lans-001", nombre: "Sala 1" },
+    sede: { id: "sede-lans-001", nombre: "LANS" },
+    fecha: "2025-06-12",
+    horaInicioPlan: "10:00",
+    horaFinPlan: "12:00",
+    horasPlanificadas: 2,
+    createdAt: "2026-06-11T17:00:00.000Z",
+  },
+];
+
+export async function mockTurnosPendientes(page, pendientes = TURNOS_PENDIENTES) {
+  await page.route("**/turnos/pendientes", async (route) => {
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(pendientes) });
+  });
+}

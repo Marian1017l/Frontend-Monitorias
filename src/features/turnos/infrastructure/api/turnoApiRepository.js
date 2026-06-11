@@ -25,6 +25,12 @@ export class TurnoApiRepository extends TurnoRepository {
     const data = await res.json().catch(() => null);
     return { status: res.status, data };
   }
+
+  async obtenerPendientes() {
+    const res = await fetch(`${API_BASE_URL}/turnos/pendientes`);
+    const data = await res.json().catch(() => null);
+    return { status: res.status, data };
+  }
 }
 
 export const turnoApiRepository = new TurnoApiRepository();

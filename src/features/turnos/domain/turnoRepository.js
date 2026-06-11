@@ -6,4 +6,8 @@ export class TurnoRepository {
   async actualizarEstado(_id, _estado, _coordinadorId) {
     throw new Error("TurnoRepository.actualizarEstado no implementado");
   }
+
+  async obtenerPendientes() {
+    throw new Error("TurnoRepository.obtenerPendientes no implementado");
+  }
 }

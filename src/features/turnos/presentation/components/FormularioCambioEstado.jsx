@@ -1,10 +1,11 @@
 import { useActualizarEstadoTurno } from "../../application/useActualizarEstadoTurno";
+import { formatearTurnoPendiente } from "../../domain/entities/turno";
 import { Campo } from "../../../../shared/components/Campo";
 import { FeedbackMessage } from "../../../../shared/components/FeedbackMessage";
 import { estilosTarjeta } from "../../../../shared/styles/common.styles";
 
 export function FormularioCambioEstado() {
-  const { campos, estados, coordinadores, enviando, feedback, handleChange, handleSubmit } = useActualizarEstadoTurno();
+  const { campos, estados, coordinadores, pendientes, cargandoPendientes, enviando, feedback, handleChange, handleSubmit } = useActualizarEstadoTurno();
 
   return (
     <div style={estilosTarjeta.tarjeta}>
@@ -17,17 +18,15 @@ export function FormularioCambioEstado() {
       </div>
 
       <form onSubmit={handleSubmit} style={estilosTarjeta.form}>
-        <Campo label="ID del turno" htmlFor="turnoId">
-          <input
-            id="turnoId"
-            type="text"
-            name="turnoId"
-            value={campos.turnoId}
-            onChange={handleChange}
-            placeholder="turno-seed-001"
-            required
-            style={estilosTarjeta.control}
-          />
+        <Campo label="Turno pendiente de aprobacion" htmlFor="turnoId">
+          <select id="turnoId" name="turnoId" value={campos.turnoId} onChange={handleChange} required style={estilosTarjeta.control}>
+            <option value="">
+              {cargandoPendientes ? "Cargando turnos pendientes..." : "Selecciona un turno"}
+            </option>
+            {pendientes.map((turno) => (
+              <option key={turno.id} value={turno.id}>{formatearTurnoPendiente(turno)}</option>
+            ))}
+          </select>
         </Campo>
 
         <Campo label="Nuevo estado" htmlFor="estado">

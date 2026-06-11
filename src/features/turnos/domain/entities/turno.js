@@ -39,3 +39,10 @@ export const ESTADO_INICIAL_CAMBIO_ESTADO = {
   estado: "",
   coordinadorId: "",
 };
+
+export function formatearTurnoPendiente(turno) {
+  const sala = turno.sala?.nombre ?? "Sala desconocida";
+  const sede = turno.sede?.nombre ? ` (${turno.sede.nombre})` : "";
+  const monitor = turno.monitor?.nombre ?? "Monitor desconocido";
+  return `${sala}${sede} — ${monitor} — ${turno.fecha} ${turno.horaInicioPlan}-${turno.horaFinPlan}`;
+}

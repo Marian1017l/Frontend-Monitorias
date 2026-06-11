@@ -1,8 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { mockDisponibilidad } from "./mocks";
+import { mockDisponibilidad, mockTurnosPendientes } from "./mocks";
 
 async function irACambiarEstado(page) {
   await mockDisponibilidad(page);
+  await mockTurnosPendientes(page);
   await page.goto("/");
   await page.getByRole("navigation").getByRole("button", { name: "Cambiar estado" }).click();
 }
@@ -12,14 +13,16 @@ function botonCambiarEstado(page) {
 }
 
 test.describe("Cambiar estado de turno", () => {
-  test("carga el formulario con todos los campos", async ({ page }) => {
+  test("carga el formulario con todos los campos y los turnos pendientes", async ({ page }) => {
     await irACambiarEstado(page);
 
     await expect(page.getByText("Cambiar estado de turno")).toBeVisible();
-    await expect(page.getByLabel("ID del turno")).toBeVisible();
+    await expect(page.getByLabel("Turno pendiente de aprobacion")).toBeVisible();
     await expect(page.getByLabel("Nuevo estado")).toBeVisible();
     await expect(page.getByLabel("Coordinador (opcional)")).toBeVisible();
     await expect(botonCambiarEstado(page)).toBeVisible();
+
+    await expect(page.getByRole("option", { name: /Sala 1 \(LANS\) — Mariana López/ })).toBeAttached();
   });
 
   test("actualiza el estado correctamente cuando la API responde 200", async ({ page }) => {
@@ -29,20 +32,20 @@ test.describe("Cambiar estado de turno", () => {
         contentType: "application/json",
         body: JSON.stringify({
           id: "turno-seed-001",
-          estadoAnterior: "aprobado",
-          estadoNuevo: "en_curso",
+          estadoAnterior: "pendiente_aprobacion",
+          estadoNuevo: "aprobado",
           updatedAt: "2026-06-11T17:17:19.118Z",
         }),
       });
     });
 
     await irACambiarEstado(page);
-    await page.getByLabel("ID del turno").fill("turno-seed-001");
-    await page.getByLabel("Nuevo estado").selectOption("en_curso");
+    await page.getByLabel("Turno pendiente de aprobacion").selectOption("turno-seed-001");
+    await page.getByLabel("Nuevo estado").selectOption("aprobado");
     await page.getByLabel("Coordinador (opcional)").selectOption("coordinador-001");
     await botonCambiarEstado(page).click();
 
-    await expect(page.getByText("Turno turno-seed-001: aprobado → en_curso")).toBeVisible();
+    await expect(page.getByText("Turno turno-seed-001: pendiente_aprobacion → aprobado")).toBeVisible();
   });
 
   test("muestra error de transicion invalida cuando la API responde 422", async ({ page }) => {
@@ -55,7 +58,7 @@ test.describe("Cambiar estado de turno", () => {
     });
 
     await irACambiarEstado(page);
-    await page.getByLabel("ID del turno").fill("turno-seed-001");
+    await page.getByLabel("Turno pendiente de aprobacion").selectOption("turno-seed-001");
     await page.getByLabel("Nuevo estado").selectOption("aprobado");
     await botonCambiarEstado(page).click();
 

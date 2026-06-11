@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ESTADO_INICIAL_CAMBIO_ESTADO, ESTADOS_TURNO } from "../domain/entities/turno";
 import { turnoApiRepository } from "../infrastructure/api/turnoApiRepository";
 import { COORDINADORES_MOCK } from "../infrastructure/mocks/coordinadores.mock";
@@ -7,9 +7,28 @@ export function useActualizarEstadoTurno(repository = turnoApiRepository) {
   const [campos, setCampos] = useState(ESTADO_INICIAL_CAMBIO_ESTADO);
   const [enviando, setEnviando] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [pendientes, setPendientes] = useState([]);
+  const [cargandoPendientes, setCargandoPendientes] = useState(false);
 
   const estados = ESTADOS_TURNO;
   const coordinadores = COORDINADORES_MOCK;
+
+  const cargarPendientes = async () => {
+    setCargandoPendientes(true);
+    try {
+      const { status, data } = await repository.obtenerPendientes();
+      if (status === 200) setPendientes(data ?? []);
+    } catch {
+      // si falla, el formulario sigue disponible para ingresar el ID manualmente
+    } finally {
+      setCargandoPendientes(false);
+    }
+  };
+
+  useEffect(() => {
+    cargarPendientes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,6 +53,8 @@ export function useActualizarEstadoTurno(repository = turnoApiRepository) {
           tipo: "exito",
           mensaje: `Turno ${data.id}: ${data.estadoAnterior} → ${data.estadoNuevo}`,
         });
+        setCampos(ESTADO_INICIAL_CAMBIO_ESTADO);
+        await cargarPendientes();
         return;
       }
 
@@ -50,5 +71,5 @@ export function useActualizarEstadoTurno(repository = turnoApiRepository) {
     }
   };
 
-  return { campos, estados, coordinadores, enviando, feedback, handleChange, handleSubmit };
+  return { campos, estados, coordinadores, pendientes, cargandoPendientes, enviando, feedback, handleChange, handleSubmit };
 }
