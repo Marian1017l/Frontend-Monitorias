@@ -31,19 +31,14 @@ export function useAsignarTurno(repository = turnoApiRepository) {
         const monitor = monitores.find((m) => m.id === campos.monitorId);
         setFeedback({
           tipo: "exito",
-          mensaje: `Turno asignado: ${salon?.nombre} — ${monitor?.nombre} — ${campos.fecha} de ${campos.horaInicio} a ${campos.horaFin}`,
+          mensaje: `Turno asignado: ${salon?.nombre} — ${monitor?.nombre} — ${campos.fecha} de ${campos.horaInicio} a ${campos.horaFin} (${data?.estado ?? "pendiente_aprobacion"})`,
         });
         setCampos(ESTADO_INICIAL_TURNO);
         return;
       }
 
-      if (status === 409) {
-        setFeedback({ tipo: "error", mensaje: data?.detalle ?? "Conflicto al asignar el turno." });
-        return;
-      }
-
-      if (status === 400) {
-        setFeedback({ tipo: "error", mensaje: data?.error ?? "Datos invalidos." });
+      if (status === 400 || status === 404 || status === 409 || status === 422) {
+        setFeedback({ tipo: "error", mensaje: data?.detalle ?? "No se pudo asignar el turno." });
         return;
       }
 

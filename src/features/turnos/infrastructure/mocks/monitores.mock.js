@@ -1,3 +1,5 @@
 export const MONITORES_MOCK = [
-  { id: "monitor-1", nombre: "Carlos Perez" },
+  { id: "monitor-001", nombre: "Mariana López" },
+  { id: "monitor-002", nombre: "Luis Henao" },
+  { id: "monitor-003", nombre: "Carlos Pérez" },
 ];

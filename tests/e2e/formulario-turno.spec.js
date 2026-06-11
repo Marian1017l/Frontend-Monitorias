@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
 
 async function llenarFormulario(page) {
-  await page.getByLabel("Salon").selectOption("sala-1");
-  await page.getByLabel("Monitor").selectOption("monitor-1");
+  await page.getByLabel("Salon").selectOption("sala-lans-001");
+  await page.getByLabel("Monitor").selectOption("monitor-001");
   await page.getByLabel("Fecha").fill("2025-06-11");
   await page.getByLabel("Hora inicio").fill("10:00");
   await page.getByLabel("Hora fin").fill("12:00");
@@ -26,7 +26,11 @@ test.describe("Formulario de asignacion de turno", () => {
       await route.fulfill({
         status: 201,
         contentType: "application/json",
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+          id: "b3ed5769-1484-4f67-b936-d409c7752416",
+          estado: "pendiente_aprobacion",
+          horasPlanificadas: 2,
+        }),
       });
     });
 
@@ -35,14 +39,15 @@ test.describe("Formulario de asignacion de turno", () => {
     await page.getByRole("button", { name: "Asignar turno" }).click();
 
     await expect(page.getByText(/Turno asignado: Sala 1/)).toBeVisible();
+    await expect(page.getByText(/pendiente_aprobacion/)).toBeVisible();
   });
 
-  test("muestra mensaje de conflicto cuando la API responde 409", async ({ page }) => {
+  test("muestra mensaje de conflicto (TURNO_SOLAPADO) cuando la API responde 409", async ({ page }) => {
     await page.route("**/turnos", async (route) => {
       await route.fulfill({
         status: 409,
         contentType: "application/json",
-        body: JSON.stringify({ detalle: "El salon ya tiene un turno asignado en ese horario." }),
+        body: JSON.stringify({ error: "TURNO_SOLAPADO", detalle: "El monitor ya tiene un turno en esa fecha y franja." }),
       });
     });
 
@@ -50,7 +55,7 @@ test.describe("Formulario de asignacion de turno", () => {
     await llenarFormulario(page);
     await page.getByRole("button", { name: "Asignar turno" }).click();
 
-    await expect(page.getByText("El salon ya tiene un turno asignado en ese horario.")).toBeVisible();
+    await expect(page.getByText("El monitor ya tiene un turno en esa fecha y franja.")).toBeVisible();
   });
 
   test("muestra mensaje de datos invalidos cuando la API responde 400", async ({ page }) => {
@@ -58,7 +63,7 @@ test.describe("Formulario de asignacion de turno", () => {
       await route.fulfill({
         status: 400,
         contentType: "application/json",
-        body: JSON.stringify({ error: "El horario de fin debe ser posterior al de inicio." }),
+        body: JSON.stringify({ error: "Solicitud invalida", detalle: "Horario fuera del rango de la sede." }),
       });
     });
 
@@ -66,7 +71,23 @@ test.describe("Formulario de asignacion de turno", () => {
     await llenarFormulario(page);
     await page.getByRole("button", { name: "Asignar turno" }).click();
 
-    await expect(page.getByText("El horario de fin debe ser posterior al de inicio.")).toBeVisible();
+    await expect(page.getByText("Horario fuera del rango de la sede.")).toBeVisible();
+  });
+
+  test("muestra mensaje de no encontrado cuando la API responde 404", async ({ page }) => {
+    await page.route("**/turnos", async (route) => {
+      await route.fulfill({
+        status: 404,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "No encontrado", detalle: "Monitor, sala o sede no encontrada" }),
+      });
+    });
+
+    await page.goto("/");
+    await llenarFormulario(page);
+    await page.getByRole("button", { name: "Asignar turno" }).click();
+
+    await expect(page.getByText("Monitor, sala o sede no encontrada")).toBeVisible();
   });
 
   test("muestra error cuando no hay conexion con el servidor", async ({ page }) => {
