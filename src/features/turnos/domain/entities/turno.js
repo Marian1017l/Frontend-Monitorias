@@ -15,3 +15,27 @@ export function crearTurnoDesdeFormulario(campos) {
     horaFinPlan: campos.horaFin,
   };
 }
+
+export const ESTADOS_TURNO = [
+  "pendiente_aprobacion",
+  "aprobado",
+  "rechazado",
+  "en_curso",
+  "cancelado",
+  "finalizado",
+];
+
+export const TRANSICIONES_VALIDAS = {
+  pendiente_aprobacion: ["aprobado", "rechazado"],
+  aprobado: ["en_curso", "cancelado", "pendiente_aprobacion"],
+  en_curso: ["finalizado"],
+  finalizado: [],
+  cancelado: [],
+  rechazado: [],
+};
+
+export const ESTADO_INICIAL_CAMBIO_ESTADO = {
+  turnoId: "",
+  estado: "",
+  coordinadorId: "",
+};

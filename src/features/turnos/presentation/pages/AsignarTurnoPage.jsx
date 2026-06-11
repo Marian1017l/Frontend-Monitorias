@@ -1,9 +1,9 @@
 import { FormularioTurno } from "../components/FormularioTurno";
-import { estilos } from "../styles/formularioTurno.styles";
+import { estilosApp } from "../../../../shared/styles/common.styles";
 
 export function AsignarTurnoPage() {
   return (
-    <div style={estilos.contenedor}>
+    <div style={estilosApp.main}>
       <FormularioTurno />
     </div>
   );

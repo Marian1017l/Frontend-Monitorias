@@ -1,13 +1,53 @@
-export const estilos = {
-  contenedor: {
+export const estilosApp = {
+  layout: {
     minHeight: "100vh",
     backgroundColor: "#F7F8FA",
+    display: "flex",
+    flexDirection: "column",
+    fontFamily: "system-ui, -apple-system, sans-serif",
+  },
+  main: {
+    flex: 1,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     padding: "2rem",
-    fontFamily: "system-ui, -apple-system, sans-serif",
   },
+};
+
+export const estilosNav = {
+  nav: {
+    display: "flex",
+    gap: "0.5rem",
+    padding: "1rem 1.5rem",
+    backgroundColor: "#ffffff",
+    borderBottom: "1px solid #E5E7EB",
+  },
+  boton: {
+    padding: "0.5rem 1rem",
+    border: "1px solid #D1D5DB",
+    borderRadius: "6px",
+    backgroundColor: "#ffffff",
+    color: "#374151",
+    fontSize: "0.875rem",
+    fontFamily: "inherit",
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+  botonActivo: {
+    padding: "0.5rem 1rem",
+    border: "1px solid #1E3A8A",
+    borderRadius: "6px",
+    backgroundColor: "#1E3A8A",
+    color: "#ffffff",
+    fontSize: "0.875rem",
+    fontFamily: "inherit",
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+};
+
+export const estilosTarjeta = {
   tarjeta: {
     backgroundColor: "#ffffff",
     borderRadius: "12px",

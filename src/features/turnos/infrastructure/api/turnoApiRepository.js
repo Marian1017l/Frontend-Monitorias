@@ -12,6 +12,19 @@ export class TurnoApiRepository extends TurnoRepository {
     const data = await res.json().catch(() => null);
     return { status: res.status, data };
   }
+
+  async actualizarEstado(id, estado, coordinadorId) {
+    const body = coordinadorId ? { estado, coordinadorId } : { estado };
+
+    const res = await fetch(`${API_BASE_URL}/turnos/${id}/estado`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    const data = await res.json().catch(() => null);
+    return { status: res.status, data };
+  }
 }
 
 export const turnoApiRepository = new TurnoApiRepository();

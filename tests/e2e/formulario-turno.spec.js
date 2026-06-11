@@ -1,4 +1,11 @@
 import { test, expect } from "@playwright/test";
+import { mockDisponibilidad } from "./mocks";
+
+async function irAAsignarTurno(page) {
+  await mockDisponibilidad(page);
+  await page.goto("/");
+  await page.getByRole("navigation").getByRole("button", { name: "Asignar turno" }).click();
+}
 
 async function llenarFormulario(page) {
   await page.getByLabel("Salon").selectOption("sala-lans-001");
@@ -8,9 +15,13 @@ async function llenarFormulario(page) {
   await page.getByLabel("Hora fin").fill("12:00");
 }
 
+function botonAsignar(page) {
+  return page.locator("form").getByRole("button", { name: "Asignar turno" });
+}
+
 test.describe("Formulario de asignacion de turno", () => {
   test("carga el formulario con todos los campos", async ({ page }) => {
-    await page.goto("/");
+    await irAAsignarTurno(page);
 
     await expect(page.getByText("Asignar turno de monitoria")).toBeVisible();
     await expect(page.getByLabel("Salon")).toBeVisible();
@@ -18,7 +29,7 @@ test.describe("Formulario de asignacion de turno", () => {
     await expect(page.getByLabel("Fecha")).toBeVisible();
     await expect(page.getByLabel("Hora inicio")).toBeVisible();
     await expect(page.getByLabel("Hora fin")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Asignar turno" })).toBeVisible();
+    await expect(botonAsignar(page)).toBeVisible();
   });
 
   test("muestra mensaje de exito cuando la API responde 201", async ({ page }) => {
@@ -34,9 +45,9 @@ test.describe("Formulario de asignacion de turno", () => {
       });
     });
 
-    await page.goto("/");
+    await irAAsignarTurno(page);
     await llenarFormulario(page);
-    await page.getByRole("button", { name: "Asignar turno" }).click();
+    await botonAsignar(page).click();
 
     await expect(page.getByText(/Turno asignado: Sala 1/)).toBeVisible();
     await expect(page.getByText(/pendiente_aprobacion/)).toBeVisible();
@@ -51,9 +62,9 @@ test.describe("Formulario de asignacion de turno", () => {
       });
     });
 
-    await page.goto("/");
+    await irAAsignarTurno(page);
     await llenarFormulario(page);
-    await page.getByRole("button", { name: "Asignar turno" }).click();
+    await botonAsignar(page).click();
 
     await expect(page.getByText("El monitor ya tiene un turno en esa fecha y franja.")).toBeVisible();
   });
@@ -67,9 +78,9 @@ test.describe("Formulario de asignacion de turno", () => {
       });
     });
 
-    await page.goto("/");
+    await irAAsignarTurno(page);
     await llenarFormulario(page);
-    await page.getByRole("button", { name: "Asignar turno" }).click();
+    await botonAsignar(page).click();
 
     await expect(page.getByText("Horario fuera del rango de la sede.")).toBeVisible();
   });
@@ -83,9 +94,9 @@ test.describe("Formulario de asignacion de turno", () => {
       });
     });
 
-    await page.goto("/");
+    await irAAsignarTurno(page);
     await llenarFormulario(page);
-    await page.getByRole("button", { name: "Asignar turno" }).click();
+    await botonAsignar(page).click();
 
     await expect(page.getByText("Monitor, sala o sede no encontrada")).toBeVisible();
   });
@@ -93,9 +104,9 @@ test.describe("Formulario de asignacion de turno", () => {
   test("muestra error cuando no hay conexion con el servidor", async ({ page }) => {
     await page.route("**/turnos", (route) => route.abort());
 
-    await page.goto("/");
+    await irAAsignarTurno(page);
     await llenarFormulario(page);
-    await page.getByRole("button", { name: "Asignar turno" }).click();
+    await botonAsignar(page).click();
 
     await expect(page.getByText("No se pudo conectar con el servidor.")).toBeVisible();
   });

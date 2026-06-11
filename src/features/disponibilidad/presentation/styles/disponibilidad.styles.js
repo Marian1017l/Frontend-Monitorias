@@ -1,0 +1,55 @@
+export const estilosDisponibilidad = {
+  contenedor: {
+    backgroundColor: "#ffffff",
+    borderRadius: "12px",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06)",
+    width: "100%",
+    maxWidth: "640px",
+    overflow: "hidden",
+  },
+  encabezado: {
+    display: "flex",
+    alignItems: "stretch",
+    gap: "1.25rem",
+    padding: "1.5rem 1.75rem",
+    borderBottom: "1px solid #E5E7EB",
+  },
+  cuerpo: {
+    padding: "1.75rem",
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+  },
+  consultadaEn: {
+    margin: 0,
+    fontSize: "0.75rem",
+    color: "#9CA3AF",
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+    gap: "0.75rem",
+  },
+  tarjetaSala: {
+    border: "1px solid #E5E7EB",
+    borderRadius: "8px",
+    padding: "0.875rem 1rem",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.5rem",
+  },
+  nombreSala: {
+    margin: 0,
+    fontSize: "0.95rem",
+    fontWeight: 600,
+    color: "#111827",
+  },
+  badge: {
+    alignSelf: "flex-start",
+    padding: "0.2rem 0.6rem",
+    borderRadius: "999px",
+    fontSize: "0.75rem",
+    fontWeight: 600,
+    border: "1px solid",
+  },
+};
