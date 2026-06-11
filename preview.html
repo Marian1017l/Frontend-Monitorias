@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurnoMonitores — Asignar turno</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: #F7F8FA;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      color: #111827;
+    }
+
+    .tarjeta {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+      width: 100%;
+      max-width: 480px;
+      overflow: hidden;
+    }
+
+    .encabezado {
+      display: flex;
+      align-items: stretch;
+      gap: 1.25rem;
+      padding: 1.5rem 1.75rem;
+      border-bottom: 1px solid #E5E7EB;
+    }
+
+    .barra-lateral {
+      width: 4px;
+      border-radius: 4px;
+      background-color: #1E3A8A;
+      flex-shrink: 0;
+    }
+
+    .eyebrow {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6B7280;
+    }
+
+    .titulo {
+      margin-top: 0.2rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    form {
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #374151;
+      letter-spacing: 0.01em;
+    }
+
+    input, select {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      border: 1px solid #D1D5DB;
+      border-radius: 6px;
+      background-color: #F9FAFB;
+      color: #111827;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, select:focus {
+      border-color: #1E3A8A;
+      background-color: #fff;
+    }
+
+    #feedback {
+      display: none;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    #feedback.exito {
+      display: block;
+      background-color: #F0FDF4;
+      border: 1px solid #86EFAC;
+      color: #15803D;
+    }
+
+    #feedback.error {
+      display: block;
+      background-color: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: #DC2626;
+    }
+
+    .acciones {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+      margin-top: 0.25rem;
+    }
+
+    .btn-principal {
+      padding: 0.65rem 1.25rem;
+      background-color: #1E3A8A;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s;
+    }
+
+    .btn-principal:hover:not(:disabled) { background-color: #1e40af; }
+
+    .btn-principal:disabled {
+      background-color: #9CA3AF;
+      cursor: not-allowed;
+    }
+
+    .btn-conflicto {
+      padding: 0.6rem 1.25rem;
+      background-color: #ffffff;
+      color: #DC2626;
+      border: 1px solid #FECACA;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s;
+    }
+
+    .btn-conflicto:hover:not(:disabled) { background-color: #FEF2F2; }
+
+    .btn-conflicto:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+<div class="tarjeta">
+  <div class="encabezado">
+    <div class="barra-lateral"></div>
+    <div>
+      <p class="eyebrow">Coordinador de sede</p>
+      <h2 class="titulo">Asignar turno de monitoria</h2>
+    </div>
+  </div>
+
+  <form id="form-turno" novalidate>
+    <div class="campo">
+      <label for="salonId">Salon</label>
+      <select id="salonId">
+        <option value="">Selecciona un salon</option>
+        <option value="sala-1">Sala 1</option>
+        <option value="sala-2">Sala 2</option>
+        <option value="mac">MAC</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="monitorId">Monitor</label>
+      <select id="monitorId">
+        <option value="">Selecciona un monitor</option>
+        <option value="monitor-1">Carlos Perez</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha" />
+    </div>
+
+    <div class="campo">
+      <label for="horaInicio">Hora inicio</label>
+      <input type="time" id="horaInicio" />
+    </div>
+
+    <div class="campo">
+      <label for="horaFin">Hora fin</label>
+      <input type="time" id="horaFin" />
+    </div>
+
+    <div id="feedback"></div>
+
+    <div class="acciones">
+      <button type="submit" class="btn-principal" id="btn-asignar">Asignar turno</button>
+      <button type="button" class="btn-conflicto" id="btn-conflicto">Simular conflicto</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const SALONES = { "sala-1": "Sala 1", "sala-2": "Sala 2", "mac": "MAC" };
+  const MONITORES = { "monitor-1": "Carlos Perez" };
+
+  const form = document.getElementById("form-turno");
+  const btnAsignar = document.getElementById("btn-asignar");
+  const btnConflicto = document.getElementById("btn-conflicto");
+  const feedback = document.getElementById("feedback");
+
+  function mostrarFeedback(tipo, mensaje) {
+    feedback.className = tipo;
+    feedback.textContent = mensaje;
+  }
+
+  function limpiarFeedback() {
+    feedback.className = "";
+    feedback.textContent = "";
+  }
+
+  function bloquearBotones() {
+    btnAsignar.disabled = true;
+    btnConflicto.disabled = true;
+  }
+
+  function liberarBotones() {
+    btnAsignar.disabled = false;
+    btnAsignar.textContent = "Asignar turno";
+    btnConflicto.disabled = false;
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    limpiarFeedback();
+
+    const salonId = document.getElementById("salonId").value;
+    const monitorId = document.getElementById("monitorId").value;
+    const fecha = document.getElementById("fecha").value;
+    const horaInicio = document.getElementById("horaInicio").value;
+    const horaFin = document.getElementById("horaFin").value;
+
+    if (!salonId || !monitorId || !fecha || !horaInicio || !horaFin) {
+      mostrarFeedback("error", "Todos los campos son requeridos.");
+      return;
+    }
+
+    bloquearBotones();
+    btnAsignar.textContent = "Asignando...";
+
+    setTimeout(() => {
+      const salon = SALONES[salonId];
+      const monitor = MONITORES[monitorId];
+      mostrarFeedback("exito", "Turno asignado: " + salon + " — " + monitor + " — " + fecha + " de " + horaInicio + " a " + horaFin);
+      form.reset();
+      liberarBotones();
+    }, 1500);
+  });
+
+  btnConflicto.addEventListener("click", () => {
+    limpiarFeedback();
+    bloquearBotones();
+    btnAsignar.textContent = "Asignando...";
+
+    setTimeout(() => {
+      mostrarFeedback("error", "Conflicto de salon: L-204 ya tiene turno asignado en ese horario.");
+      liberarBotones();
+    }, 1500);
+  });
+</script>
+
+</body>
+</html>
